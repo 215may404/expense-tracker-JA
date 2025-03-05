@@ -1,0 +1,83 @@
+import pandas as pd
+columns = ['日期','小內容物數量','大內容物數量','福袋（框）數量','優惠類別','總額']
+filename = 'JA.csv' 
+try:
+    df = pd.read_csv(filename)
+except FileNotFoundError:
+    df = pd.DataFrame(columns = columns)
+    print('No file, please build a new file!')
+
+while True:
+    print("""
+Personal Expense Tracker
+  1. Add Transaction
+  2. Edit Transaction 
+  3. Delete transaction
+  4. View Summary
+  5. View Records
+  6. Save 
+  7. Exit
+  """)
+    choice = input("請輸入選項(1-7): ")   
+    if choice == "1":
+        date = input("請輸入當天日期(YYYY-MM-DD): ")
+        S.no = input("請輸入小內容物數量: ")
+        B.no = input("請輸入大內容物數量: ") 
+        container = input("請輸入福袋（框）數量:")
+        expenditure = S.no*1 + B.no*2 + container*20
+        if (expenditure > 35):
+          dicount = input("請輸入顧客的優惠選擇（1大/2小）:")
+          amount = expenditure - 2
+        elif (expenditure <35):
+          asmount = expenditure - 0
+        df.loc[len(df)] = {'日期':date,'小內容物數量':S.no,'大內容物數量':B.no,'福袋（框）數量':container,'優惠類別':discount,'總額':amount} 
+        df.to_csv(filename, index=False)
+        
+    elif choice == "2":
+        print(df)
+        index = int(input("請輸入編輯索引:"))
+        print(df.loc[index])
+        new_date = input('新日期(Enter 保留原值):') or df.loc[index,'Date']
+        new_S.no= input('小內容物新數量(Enter 保留原值): ') or df.loc[index,'Son.1']
+        new_B.no = input('大內容物新數量(Enter 保留原值):') or df.loc[index,'Bon.1']
+        new_ container = input('福袋新數量(Enter 保留原值):') or df.loc[index,'container']
+        new_expenditure = new_S.no*1 + new_B.no*2 + new_container*20
+        if (new_expenditure > 35):
+          new_dicount = input("請輸入顧客的優惠選擇（1大/2小）:")
+          new_amount = new_expenditure - 2
+        elif (new_expenditure <35):
+          new_asmount = new_expenditure - 0
+        new_amount = input('New Amount(Enter 保留原值):') or df.loc[index,'Amount']
+        df.loc[index] = {'日期':new_date,'小內容物數量':new_S.no,'大內容物數量':new_B.no,'福袋（框）數量':new_container,'優惠類別':new_discount,'總額':(new_amount)}
+        df.to_csv(filename, index=False)
+        
+    elif choice == "3":
+        print(df)
+        index = int(input("請輸入刪除索引:"))
+        df = df.drop(index).reset_index(drop =True)
+        df.to_csv(filename, index=False)
+        
+    elif choice == "4":
+        total_price = df['總額'].sum()
+        total_S.no = df['小內容物數量'].sum()
+        total_B.no = df['大內容物數量'].sum()
+        total_container = df['福袋（框）數量'].sum()
+        total_cost = total_S.no*0.241 + total_B.no*0.321 + total_container*8.8
+        profits = total_price - total_cost
+        if total_price == 0 and total_cost == 0:print('no related summary')
+        else:
+            print("View Summary")
+            print(f'總金額:${total_price}')
+            print(f'總成本:${total_cost}')
+            print(f'profit:${profits}')
+
+    elif choice == "5":
+        print("View Records")
+        print(df)
+    elif choice == "6":
+        df.to_csv(filename, index=False)
+        print("save")
+    elif choice == "7":
+        break
+    else:    
+        print("選項錯誤，請重新嘗試")
