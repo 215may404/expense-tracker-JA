@@ -5,18 +5,18 @@ try:
     df = pd.read_csv(filename)
 except FileNotFoundError:
     df = pd.DataFrame(columns = columns)
-    print('No file, please build a new file!')
+    print("沒有此檔案，請重新建立檔案")
 
 while True:
     print("""
-Personal Expense Tracker
-  1. Add Transaction
-  2. Edit Transaction 
-  3. Delete transaction
-  4. View Summary
-  5. View Records
-  6. Save 
-  7. Exit
+STGSS JA Comoany Oneiros
+  1. 新增交易
+  2. 編輯交易 
+  3. 刪除交易
+  4. 查詢交易總額
+  5. 查詢交易記錄
+  6. 儲存
+  7. 離開
   """)
     choice = input("請輸入選項(1-7): ")   
     if choice == "1":
@@ -24,41 +24,47 @@ Personal Expense Tracker
         sno = int(input("請輸入小內容物數量: "))
         bno = int(input("請輸入大內容物數量: "))
         container = int(input("請輸入福袋（框）數量:"))        
-        expenditure = sno*1 + bno*2 + container*20
-        if (expenditure > 35):
+        expenditure = sno*1 + bno*2 + container*20       
+        if (expenditure >= 35):
           discount = input("請輸入顧客的優惠選擇(1大/2小):")        
           amount = expenditure - 2
+          print(f"已優惠金額：${amount}")
         elif (expenditure < 35):
-          discount = 0
+          discount = "none"
           amount = expenditure - 0
+          print(f"金額：${expenditure}")
         df.loc[len(df)] = {'日期':date,'小內容物數量':sno,'大內容物數量':bno,'福袋（框）數量':container,'優惠類別':discount,'總額':amount} 
         df.to_csv(filename, index=False)
+        print("\n交易成功")
         
     elif choice == "2":
         print(df)
         index = int(input("請輸入編輯索引:"))
         print(df.loc[index])
-        new_date = input('新日期(Enter 保留原值):') or df.loc[index,'date']
-        new_sno= int(input('小內容物新數量(Enter 保留原值): ')) or df.loc[index,'son']
-        new_bno = int(input('大內容物新數量(Enter 保留原值):')) or df.loc[index,'bon']
-        new_container = int(input('福袋新數量(Enter 保留原值):')) or df.loc[index,'container']
-        
-        new_expenditure = new_sno*1 + new_bno*2 + new_container*20
-        if (new_expenditure > 35): 
+        new_date = input('新日期(Enter 保留原值):') or df.loc[index,'日期']
+        new_sno = int(input("小內容物新數量(如不更改需填寫原值): ")) or df.loc[index,'小內容物數量']
+        new_bno = int(input("大內容物新數量(如不更改需填寫原值): ")) or df.loc[index,'大內容物數量']
+        new_container = int(input('福袋新數量(如不更改需填寫原值): ')) or df.loc[index,'福袋（框）數量']       
+        new_expenditure = new_sno*1 + new_bno*2 + new_container*20        
+        if (new_expenditure >= 35): 
           new_discount = input("請輸入顧客的優惠選擇(1大/2小):")        
           new_amount = new_expenditure - 2
+          print(f"已優惠金額：${new_amount}")
         elif (new_expenditure < 35):
-          new_discount = 0
+          new_discount = "none"
           new_amount = new_expenditure - 0
-        new_amount = df.loc[index,'amount']
+          print(f"金額：${new_expenditure}")
+        new_amount = df.loc[index,'總額']
         df.loc[index] = {'日期':new_date,'小內容物數量':new_sno,'大內容物數量':new_bno,'福袋（框）數量':new_container,'優惠類別':new_discount,'總額':(new_amount)}
         df.to_csv(filename, index=False)
+        print("\n交易編輯成功")
         
     elif choice == "3":
         print(df)
         index = int(input("請輸入刪除索引:"))
         df = df.drop(index).reset_index(drop =True)
         df.to_csv(filename, index=False)
+        print("\n交易刪除成功")
         
     elif choice == "4":
         total_price = df['總額'].sum()
@@ -67,19 +73,21 @@ Personal Expense Tracker
         total_container = df['福袋（框）數量'].sum()
         total_cost = 3580*0.241 + 5200*0.321 + 400*8.8
         profits = total_price - total_cost
-        if total_price == 0 and total_cost == 0:print('no related summary')
+        if total_price == 0 and total_cost == 0:print('沒有相關總結')
         else:
-            print("View Summary")
+            print("交易總金額")
             print(f'總金額:${total_price}')
             print(f'總成本:${"%.2f" % total_cost}')
             print(f'profit:${"%.2f" % profits}')
 
     elif choice == "5":
-        print("View Records")
+        print("交易記錄")
         print(df)
+    
     elif choice == "6":
         df.to_csv(filename, index=False)
-        print("save")
+        print("儲存成功")
+
     elif choice == "7":
         break
     else:    
